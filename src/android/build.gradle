@@ -1,12 +1,11 @@
 repositories {
     google()
     jcenter()
-    flatDir {
-        dirs '../app/libs'
+    maven {
+      url 'http://repo.brightcove.com/releases'
     }
 }
 
 dependencies {
-   api fileTree(dir: 'libs', include: ['*.jar, *.aar'])
-   api(name:'android-sdk-6.16.1', ext:'aar')
+    implementation "com.brightcove.player:exoplayer2:6.16.0"
 }

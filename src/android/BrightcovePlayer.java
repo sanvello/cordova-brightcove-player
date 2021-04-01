@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 
+import com.brightcove.player.model.DeliveryType;
+
 public class BrightcovePlayer extends CordovaPlugin {
 
     private String brightcovePolicyKey = null;
@@ -26,11 +28,16 @@ public class BrightcovePlayer extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals("play")) {
+        if (action.equals("playById")) {
             String accountId = args.getString(0);
             String policyKey = args.getString(1);
             String videoId = args.getString(2);
             this.play(accountId, policyKey, videoId, callbackContext);
+            return true;
+        } else if (action.equals("playByUrl")) {
+            String url = args.getString(0);
+            String deliveryType = args.getString(1);
+            this.play(url, deliveryType);
             return true;
         }
 
@@ -56,5 +63,20 @@ public class BrightcovePlayer extends CordovaPlugin {
         } else {
             callbackContext.error("Empty video ID!");
         }
+    }
+
+    private void play(String url, String deliveryType) {
+        if (url == null) {
+            callbackContext.error("Wrong input parameters");
+            return;
+        }
+        Context context = this.cordova.getActivity().getApplicationContext();
+        Intent intent = new Intent(context, BrightcoveActivity.class);
+        intent.putExtra("video-url", url);
+        intent.putExtra("delivery-type", deliveryType);
+
+        context.startActivity(intent);
+
+        callbackContext.success("Playing now with " + url);
     }
 }

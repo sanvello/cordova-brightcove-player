@@ -10,7 +10,7 @@ import com.brightcove.player.edge.VideoListener;
 import com.brightcove.player.event.EventEmitter;
 import com.brightcove.player.model.Video;
 import com.brightcove.player.view.BrightcovePlayer;
-import com.brightcove.player.view.BrightcoveVideoView;
+import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 
 public class BrightcoveActivity extends BrightcovePlayer {
 
@@ -19,12 +19,17 @@ public class BrightcoveActivity extends BrightcovePlayer {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         // When extending the BrightcovePlayer, we must assign the BrightcoveVideoView before
         // entering the superclass.
+
         setContentView(this.getIdFromResources(BRIGHTCOVE_ACTIVITY_NAME, "layout"));
-        brightcoveVideoView = (BrightcoveVideoView) findViewById(this.getIdFromResources(BRIGHTCOVE_VIEW_NAME, "id"));
+        brightcoveVideoView = (BrightcoveExoPlayerVideoView) findViewById(this.getIdFromResources(BRIGHTCOVE_VIEW_NAME, "id"));
 
         super.onCreate(savedInstanceState);
+        super.fullScreen();
+        super.setImmersive(true);
+        brightcoveVideoView.addListener("completed", (e -> this.finish()));
 
         Intent intent = getIntent();
         String brightcovePolicyKey = intent.getStringExtra("brightcove-policy-key");
@@ -45,6 +50,16 @@ public class BrightcoveActivity extends BrightcovePlayer {
         return resources.getIdentifier(activityName, location, packageName);
     }
 
+    private void playByUrl(String url, DeliveryType deliveryType) {
+      Video video = Video.createVideo(url, deliveryType);
+      this.play(video);
+    }
+
+    private void playByUrl(String url) {
+      Video video = Video.createVideo(url);
+      this.play(video);
+    }
+
     private void playById(String policyKey, String accountId, String videoId) {
         EventEmitter eventEmitter = brightcoveVideoView.getEventEmitter();
         Catalog catalog = new Catalog(eventEmitter, accountId, policyKey);
@@ -61,5 +76,10 @@ public class BrightcoveActivity extends BrightcovePlayer {
                 Log.e("BrightcoveActivity", error);
             }
         });
+    }
+
+    private void play(Video video) {
+      brightcoveVideoView.add(video);
+      brightcoveVideoView.start();
     }
 }
