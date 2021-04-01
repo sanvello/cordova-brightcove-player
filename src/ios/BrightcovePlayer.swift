@@ -13,10 +13,10 @@ import BrightcovePlayerSDK
 
     @objc(play:)
     func play(_ command: CDVInvokedUrlCommand) {
-        self.accountId = command.arguments[0] as? String ?? ""
-        self.policyKey = command.arguments[1] as? String ?? ""
+        self.brightcoveAccountId = command.arguments[0] as? String ?? ""
+        self.brightcovePolicyKey = command.arguments[1] as? String ?? ""
         let videoId = command.arguments[2] as? String ?? ""
-        if videoId.isEmpty || !self.accountId ||  !self.policyKey {
+        if videoId.isEmpty || (self.brightcoveAccountId == nil) ||  (self.brightcovePolicyKey == nil) {
             let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Wrong input parameters")
             commandDelegate.send(pluginResult, callbackId: "01")
         }
