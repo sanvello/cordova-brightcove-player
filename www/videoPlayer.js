@@ -1,7 +1,7 @@
 var exec = require("cordova/exec");
 
 exports.playById = function (accountId, policyKey, videoId, success, error) {
-  exec(success, error, "BrightcovePlayer", "play", [
+  exec(success, error, "BrightcovePlayer", "playById", [
     accountId,
     policyKey,
     videoId,
