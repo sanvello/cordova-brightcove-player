@@ -26,11 +26,11 @@ public class BrightcovePlayer extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals("play")) {
+        if (action.equals("play") && args.size == 3) {
             String accountId = args.getString(0);
             String policyKey = args.getString(1);
             String videoId = args.getString(2);
-            this.play(id, callbackContext);
+            this.play(accountId, policyKey, videoId, callbackContext);
             return true;
         }
 

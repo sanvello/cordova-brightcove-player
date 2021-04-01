@@ -13,39 +13,41 @@ import BrightcovePlayerSDK
 
     @objc(play:)
     func play(_ command: CDVInvokedUrlCommand) {
-        let videoId = command.arguments[0] as? String ?? ""
-        if videoId.isEmpty {
-            let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Video ID is not valid")
+        self.accountId = command.arguments[0] as? String ?? ""
+        self.policyKey = command.arguments[1] as? String ?? ""
+        let videoId = command.arguments[2] as? String ?? ""
+        if videoId.isEmpty || !self.accountId ||  !self.policyKey {
+            let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Wrong input parameters")
             commandDelegate.send(pluginResult, callbackId: "01")
         }
 
         self.playById(videoId)
     }
 
-    @objc(initAccount:)
-    func initAccount(_ command: CDVInvokedUrlCommand) {
-        var pluginResult: CDVPluginResult?
-        self.brightcovePolicyKey = command.arguments[0] as? String ?? ""
-        self.brightcoveAccountId = command.arguments[1] as? String ?? ""
+    // @objc(initAccount:)
+    // func initAccount(_ command: CDVInvokedUrlCommand) {
+    //     var pluginResult: CDVPluginResult?
+    //     self.brightcovePolicyKey = command.arguments[0] as? String ?? ""
+    //     self.brightcoveAccountId = command.arguments[1] as? String ?? ""
 
-        if self.brightcovePolicyKey?.isEmpty == false && self.brightcoveAccountId?.isEmpty == false {
-            pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "Brightcove player initialised")
-        } else {
-            pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Could not initialise Brightcove player")
-        }
+    //     if self.brightcovePolicyKey?.isEmpty == false && self.brightcoveAccountId?.isEmpty == false {
+    //         pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "Brightcove player initialised")
+    //     } else {
+    //         pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Could not initialise Brightcove player")
+    //     }
 
-        commandDelegate.send(pluginResult, callbackId: "01")
-    }
+    //     commandDelegate.send(pluginResult, callbackId: "01")
+    // }
 
-    @objc(switchAccount:)
-    func switchAccount(_ command: CDVInvokedUrlCommand) {
-        self.brightcovePolicyKey = command.arguments[0] as? String ?? ""
-        self.brightcoveAccountId = command.arguments[1] as? String ?? ""
+    // @objc(switchAccount:)
+    // func switchAccount(_ command: CDVInvokedUrlCommand) {
+    //     self.brightcovePolicyKey = command.arguments[0] as? String ?? ""
+    //     self.brightcoveAccountId = command.arguments[1] as? String ?? ""
 
-        if self.brightcovePolicyKey?.isEmpty == false && self.brightcoveAccountId?.isEmpty == false {
-            self.playerView?.setAccountIds(self.brightcovePolicyKey!, accountId: self.brightcoveAccountId!)
-        }
-    }
+    //     if self.brightcovePolicyKey?.isEmpty == false && self.brightcoveAccountId?.isEmpty == false {
+    //         self.playerView?.setAccountIds(self.brightcovePolicyKey!, accountId: self.brightcoveAccountId!)
+    //     }
+    // }
 
     //MARK: Private Methods
 
