@@ -37,7 +37,7 @@ public class BrightcovePlayer extends CordovaPlugin {
         } else if (action.equals("playByUrl")) {
             String url = args.getString(0);
             String deliveryType = args.getString(1);
-            this.play(url, deliveryType);
+            this.play(url, deliveryType, callbackContext);
             return true;
         }
 
