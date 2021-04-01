@@ -27,27 +27,19 @@ public class BrightcovePlayer extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("play")) {
-            String id = args.getString(0);
+            String accountId = args.getString(0);
+            String policyKey = args.getString(1);
+            String videoId = args.getString(2);
             this.play(id, callbackContext);
-            return true;
-        } else if(action.equals("initAccount")) {
-            String policyKey = args.getString(0);
-            String accountId = args.getString(1);
-            this.initAccount(policyKey, accountId, callbackContext);
-            return true;
-        } else if(action.equals("switchAccount")) {
-            String policyKey = args.getString(0);
-            String accountId = args.getString(1);
-            this.switchAccount(policyKey, accountId, callbackContext);
             return true;
         }
 
         return false;
     }
 
-    private void play(String videoId, CallbackContext callbackContext) {
-        if (this.brightcovePolicyKey == null || this.brightcoveAccountId == null) {
-            callbackContext.error("Please init your account first");
+    private void play(String accountId, String policyKey, String videoId, CallbackContext callbackContext) {
+        if (accountId == null || policyKey == null || videoId == null) {
+            callbackContext.error("Wrong input parameters");
             return;
         }
 
@@ -55,8 +47,8 @@ public class BrightcovePlayer extends CordovaPlugin {
             Context context = this.cordova.getActivity().getApplicationContext();
             Intent intent = new Intent(context, BrightcoveActivity.class);
             intent.putExtra("video-id", videoId);
-            intent.putExtra("brightcove-policy-key", this.brightcovePolicyKey);
-            intent.putExtra("brightcove-account-id", this.brightcoveAccountId);
+            intent.putExtra("brightcove-policy-key", policyKey);
+            intent.putExtra("brightcove-account-id", accountId);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
@@ -64,19 +56,5 @@ public class BrightcovePlayer extends CordovaPlugin {
         } else {
             callbackContext.error("Empty video ID!");
         }
-    }
-
-    private void initAccount(String policyKey, String accountId, CallbackContext callbackContext) {
-        if (policyKey != null && policyKey.length() > 0 && accountId != null && accountId.length() > 0 ) {
-            this.brightcovePolicyKey = policyKey;
-            this.brightcoveAccountId = accountId;
-            callbackContext.success("Brightcove account was initialised");
-        } else {
-            callbackContext.error("Brightcove policy key or account id is not valid");
-        }
-    }
-
-    private void switchAccount(String policyKey, String accountId, CallbackContext callbackContext) {
-        this.initAccount(policyKey, accountId, callbackContext);
     }
 }
