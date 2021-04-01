@@ -65,7 +65,7 @@ public class BrightcovePlayer extends CordovaPlugin {
         }
     }
 
-    private void play(String url, String deliveryType) {
+    private void play(String url, String deliveryType, CallbackContext callbackContext) {
         if (url == null) {
             callbackContext.error("Wrong input parameters");
             return;
