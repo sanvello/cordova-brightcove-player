@@ -2,20 +2,23 @@
 // BCOVPUIBasicControlView.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2017 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 
-#import "BCOVPUICommon.h"
+#import <BrightcovePlayerSDK/BCOVPUICommon.h>
 
 
 @class BCOVPUILayoutView;
 @class BCOVPUISlider;
 @class BCOVPUIButton;
+@class BCOVUILabel;
+@class AVRouteDetector;
 
+@protocol BCOVPUIButtonAccessibilityDelegate;
 
 /** Width value passed to layoutViewWithControlFromTag:width:elasticity
  *  to indicate that the default width for the control should be used. */
@@ -87,10 +90,10 @@ extern CGFloat kBCOVPUILayoutUseDefaultValue;
 /**
  * Initializes a BCOVPUIControlLayout layout with default settings.
  *
- * @param standardLayoutLines An array of arrays, where each sub-array 
+ * @param standardLayoutLines An array of arrays, where each sub-array
  * corresponds to one row of controls in the player control view.
  * Each of these sub-arrays is a list of BCOVPUILayoutView objects used in the
- * standard width layout. Each layout view typically contains a single 
+ * standard width layout. Each layout view typically contains a single
  * control element and can be created with
  * [BCOVPUIBasicControlView layoutViewWithControlFromTag:width:elasticity:]
  *
@@ -143,19 +146,22 @@ extern CGFloat kBCOVPUILayoutUseDefaultValue;
 @property (nonatomic, weak, readonly) BCOVPUIButton *jumpBackButton;
 
 /** The current time (elapsed) label */
-@property (nonatomic, weak, readonly) UILabel *currentTimeLabel;
+@property (nonatomic, weak, readonly) BCOVUILabel *currentTimeLabel;
 
 /** The time separator label */
 @property (nonatomic, weak, readonly) UILabel *timeSeparatorLabel;
 
 /** The duration label */
-@property (nonatomic, weak, readonly) UILabel *durationLabel;
+@property (nonatomic, weak, readonly) BCOVUILabel *durationLabel;
 
 /** The progress slider */
 @property (nonatomic, weak, readonly) BCOVPUISlider *progressSlider;
 
+/** The  AVRouteDetector used when allowsExternalPlayback is enabled. */
+@property (nonatomic, readonly) AVRouteDetector *routeDetector;
+
 /** The closed caption button */
-@property (nonatomic, weak, readonly) UIButton *closedCaptionButton;
+@property (nonatomic, weak, readonly) BCOVPUIButton *closedCaptionButton;
 
 /** The screen mode (fullscreen) button */
 @property (nonatomic, weak, readonly) BCOVPUIButton *screenModeButton;
@@ -165,16 +171,28 @@ extern CGFloat kBCOVPUILayoutUseDefaultValue;
 @property (nonatomic, weak, readonly) BCOVPUIButton *video360Button;
 
 /** The external route (airplay) button */
-@property (nonatomic, weak, readonly) MPVolumeView *externalRouteView;
+@property (nonatomic, weak, readonly) BCOVPUIButton *externalRouteViewButton;
 
 /** The "go to live" button */
 @property (nonatomic, weak, readonly) BCOVPUIButton *liveButton;
 
+/** The Preferred Bitrate Button button */
+/** Only appears when videoQualityOptions is set on BCOVPUIPlayerViewOptions */
+@property (nonatomic, weak, readonly) BCOVPUIButton *preferredBitrateButton;
+
+/** The Picture-In-Picture Button */
+@property (nonatomic, weak, readonly) BCOVPUIButton *pictureInPictureButton;
+
 /** Yes if the closedCaptionButton is visible. No if invisible. */
 @property (nonatomic, readonly, getter=isClosedCaptionEnabled) BOOL closedCaptionEnabled;
 
-/** Yes if the externalRouteView is visible. No if invisible. */
+/** Yes if the externalRouteViewButton is visible. No if invisible. */
 @property (nonatomic, assign, readonly, getter=isExternalRouteEnabled) BOOL externalRouteEnabled;
+
+/** Yes if the preferredBitrateButton is visible. No if invisible */
+@property (nonatomic, assign) BOOL preferredBitrateEnabled;
+
+@property (nonatomic, assign) BOOL pictureInPictureEnabled;
 
 /** Set to YES to change the control view's UI to the advertising state. */
 @property(nonatomic, readwrite) BOOL advertisingMode;
@@ -254,6 +272,13 @@ extern CGFloat kBCOVPUILayoutUseDefaultValue;
 - (void)setTitleColorForButtons:(UIColor *)titleColor forState:(UIControlState)state;
 
 /**
+ * Shows or hides the screen mode button based on Video360 Mode
+ *
+ * @param isGogglesMode Boolean determining if device is in VR Goggles Mode
+ */
+- (void)video360OptionSelected:(BOOL)isGogglesMode;
+
+/**
  * Constructs the UI control item with the specified tag.
  * Returned object may be a BCOVPUIButton, BCOVPUISlider, UILabel,
  * or MPVolumeView depending on the specified tag.
@@ -265,5 +290,11 @@ extern CGFloat kBCOVPUILayoutUseDefaultValue;
  * @return Initialized UI component.
  */
 + (UIView *)createPUIControlItemWithViewTag:(BCOVPUIViewTag)tag;
+
+/**
+ * Sets the accessibility delegate on control view buttons
+ * @param delegate The object which conforms to the BCOVPUIButtonAccessibilityDelegate protocol
+ */
+- (void)setButtonsAccessibilityDelegate:(id<BCOVPUIButtonAccessibilityDelegate>)delegate;
 
 @end

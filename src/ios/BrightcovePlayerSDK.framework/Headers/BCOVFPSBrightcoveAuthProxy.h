@@ -2,11 +2,11 @@
 // BCOVFPSBrightcoveAuthProxy.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2017 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
-#import "BCOVFPSComponent.h"
+#import <BrightcovePlayerSDK/BCOVFPSComponent.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +31,11 @@ extern NSString * const kBCOVSourceKeySystemFairPlayKeyRequestURLKey;
  * Error domain for FairPlay Auth Proxy related errors.
  */
 extern NSString * const kBCOVFPSAuthProxyErrorDomain;
+
+/**
+ * Key for retreiving response data from an NSError object's userInfo dictionary.
+ */
+extern NSString * const kBCOVFPSAuthProxyResponseData;
 
 /*
  * Request for Application Certificate failed.
@@ -98,23 +103,6 @@ extern const NSInteger kBCOVFPSAuthProxyErrorCodeContentKeyGenerationFailed;
  */
 - (void)retrieveApplicationCertificate:(void (^)(NSData * __nullable applicationCetificate,
                                                  NSError * __nullable error))completionHandler;
-
-@end
-
-
-@interface BCOVFPSBrightcoveAuthProxy (Unavailable)
-
-- (nullable instancetype)init
-    __attribute__((unavailable("Use `-[BCOVFPSBrightcoveAuthProxy initWithApplicationId:publisherId:]` instead.")));
-
-@end
-
-
-@interface BCOVFPSBrightcoveAuthProxy (Deprecated)
-
-- (nullable instancetype)initWithApplicationId:(NSString *)appId
-                                   publisherId:(NSString *)pubId
-    __attribute__((deprecated("Use -BCOVFPSBrightcoveAuthProxy initWithPublisherId:applicationId: instead")));
 
 @end
 

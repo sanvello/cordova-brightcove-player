@@ -2,7 +2,7 @@
 // BCOVCuePoint.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2017 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -19,6 +19,8 @@ extern NSString * const kBCOVCuePointTypeAdSlot;
  * Cue point type representing a companion ad
  */
 extern NSString * const kBCOVCuePointTypeAdCompanion;
+
+extern NSString * const kBCOVCuePointPropertyKeyName;
 
 
 @protocol BCOVMutableCuePoint;

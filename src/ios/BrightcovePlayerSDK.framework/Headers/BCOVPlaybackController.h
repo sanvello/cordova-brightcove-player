@@ -2,7 +2,7 @@
 // BCOVPlaybackController.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2017 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -47,6 +47,24 @@ typedef NS_ENUM(NSInteger, BCOVVideo360ProjectionStyle) {
     
     BCOVVideo360ProjectionStyleVRGoggles  = 1,
     
+};
+
+/**
+ * Type of video.
+ */
+typedef NS_ENUM(NSUInteger, BCOVVideoType) {
+
+    /** Video type can not be determined. */
+    BCOVVideoTypeUnknown,
+
+    /** Video on demand (has a duration). */
+    BCOVVideoTypeVOD,
+
+    /** Video has no duration, and a limited seekable range. */
+    BCOVVideoTypeLive,
+
+    /** Video has no duration, and a large seekable range. */
+    BCOVVideoTypeLiveDVR
 };
 
 // The approximate vertical angle of view when the view orientation's zoom is 1.0.
@@ -105,7 +123,6 @@ extern const CGFloat kBCOVVideo360BaseAngleOfView;
 /**
  * Key in the playback controller's options dictionary for enabling or disabling
  * buffer optimization in the AVPlayer.
- * This value is only used on iOS 10 and later.
  * Valid values:
  *   0: Buffer optimization is turned off. Set this value if you want to set
  *      the AVPlayerItem's preferredForwardBufferDuration property yourself.
@@ -277,7 +294,7 @@ typedef UIView *(^BCOVPlaybackControllerViewStrategy)(UIView *view, id<BCOVPlayb
 @property (nonatomic, readonly, copy) id<BCOVMutableAnalytics> analytics;
 
 /**
- * OnceUX Only:
+ * SSAI Only:
  * If using other ad plug-ins, use `seekWithoutAds:completionHandler:` instead.
  *
  * Disables ad playback which otherwise might occur after a forward -seekTo:.
@@ -329,9 +346,41 @@ typedef UIView *(^BCOVPlaybackControllerViewStrategy)(UIView *view, id<BCOVPlayb
 @property (nonatomic, readwrite, assign, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
 
 /**
- * Set shutter to YES to hide the current player view behind an opaque
- * black shutter view. Set shutter active to NO to make the shutter view
- * transparent to reveal the player view.
+ * Set this to your preferred peak bit rate value. This value will be set on the current
+ * session and future sessions unless changed via the (optional) Preferred Bitrate menu.
+ */
+- (void)setPreferredPeakBitRate:(double)preferredPeakBitRate;
+
+/**
+ * Sets the audience segment targeting key/values you want to be be passed on in
+ * ad requests. This is only currently supported with IMA + VAST.
+ */
+- (void)updateAudienceSegmentTargetingValues:(NSDictionary *)audienceSegmentTargetingValues;
+
+/**
+ * Enables or disables thumbnail scrubbing for this playback controller.
+ *
+ * @warning *Deprecated:* Use thumbnailSeekingEnabled instead
+ *
+ * Default value is YES
+ */
+@property (nonatomic, readwrite, assign) BOOL thumbnailScrubbingEnabled __attribute__((deprecated("Use thumbnailSeekingEnabled instead.")));
+
+/**
+ * Enables or disables thumbnail seeking for this playback controller.
+ *
+ * Default value is YES
+ */
+@property (nonatomic, readwrite, assign) BOOL thumbnailSeekingEnabled;
+
+/**
+ * @abstract A view which obscures or reveals the player view.
+ *
+ * @discussion Set shutter to YES to hide the current player view behind an opaque
+ * black shutter view. Set shutter to NO to make the shutter view
+ * transparent, revealing the player view.
+ *
+ * The shutter property setter method dispatches to the main thread.
  */
 
 @property (nonatomic, readwrite) BOOL shutter;
@@ -789,6 +838,83 @@ typedef UIView *(^BCOVPlaybackControllerViewStrategy)(UIView *view, id<BCOVPlayb
  * session seekableRanges.
  */
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didChangeSeekableRanges:(NSArray *)seekableRanges;
+
+/**
+ * Called when the playback controller can find no playable videos
+ * when videos are passed into the playback controller's `setVideos:` method
+ *
+ * @param controller The playback controller to which this instance serves as delegate.
+ * @param unplayableVideos The videos that were passed into the `setVideos:` method
+ */
+- (void)playbackController:(id<BCOVPlaybackController>)controller noPlayableVideosFound:(id<NSFastEnumeration>)unplayableVideos;
+
+/**
+ * Called when the metadata have been determined for the current video.
+ *
+ * The metadata will be determined after `kBCOVPlaybackSessionLifecycleEventReady`
+ * has been received for the session using the device locale.
+ *
+ * @param controller The playback controller to which this instance serves as delegate.
+ * @param metadata The dictionary containing key-value pairs of the metadata.
+ * @param video The video which has had its metadata determined.
+ */
+- (void)playbackController:(id<BCOVPlaybackController>)controller determinedMetadata:(NSDictionary<NSString *, NSString *> *)metadata forVideo:(BCOVVideo *)video;
+
+/**
+ * Called when the video type has been determined for the current video.
+ *
+ * The video type will be determined after `kBCOVPlaybackSessionLifecycleEventReady`
+ * has been received for the session.
+ *
+ * You can use the returned videoType to determine which BCOVPUIControlLayout to
+ * utilize on the current BCOVPUIPlayerView. This can be helpful for dynamically
+ * switching between control layouts if utilizing different video types in a playlist.
+ *
+ * The value can be one of the following:
+ * - BCOVVideoTypeVOD
+ * - BCOVVideoTypeLive
+ * - BCOVVideoTypeLiveDVR
+ * - BCOVVideoTypeUnknown
+ *
+ * @param controller The playback controller to which this instance serves as delegate.
+ * @param videoType The determined video type.
+ * @param video The video which has had its type determined.
+ */
+- (void)playbackController:(id<BCOVPlaybackController>)controller determinedVideoType:(BCOVVideoType)videoType forVideo:(BCOVVideo *)video;
+
+/**
+ * Called when the codecs have been determined for the current video.
+ *
+ * The codecs will be determined after `kBCOVPlaybackSessionLifecycleEventReady`
+ * has been received for the session.
+ *
+ * @param controller The playback controller to which this instance serves as delegate.
+ * @param codecs The array containing NSString values of the codecs used for the video
+ * @param video The video which has had its codecs determined.
+ */
+- (void)playbackController:(id<BCOVPlaybackController>)controller determinedCodecs:(NSArray<NSString *> *)codecs forVideo:(BCOVVideo *)video;
+
+/**
+ * Called when a new audible AVMediaSelectionOption is set on the current BCOVPlaybackSession
+ * which can be done using BCOVPUIPlayerView or BCOVTVPlayerView, or by calling the
+ * AVMediaSelectionOption setter methods of BCOVPlaybackSession.
+ *
+ * @param controller The playback controller to which this instance serves as delegate.
+ * @param session The playback session whose AVPlayer's currentItem's media option was changed
+ * @param audibleMediaOption The newly selected AVMediaSelectionOption
+ */
+- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didChangeSelectedAudibleMediaOption:(AVMediaSelectionOption *)audibleMediaOption;
+
+/**
+ * Called when a new legible AVMediaSelectionOption is set on the current BCOVPlaybackSession
+ * which can be done using BCOVPUIPlayerView or BCOVTVPlayerView, or by calling the
+ * AVMediaSelectionOption setter methods of BCOVPlaybackSession.
+ *
+ * @param controller The playback controller to which this instance serves as delegate.
+ * @param session The playback session whose AVPlayer's currentItem's media option was changed
+ * @param legibleMediaOption The newly selected AVMediaSelectionOption
+*/
+- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didChangeSelectedLegibleMediaOption:(AVMediaSelectionOption *)legibleMediaOption;
 
 @end
 

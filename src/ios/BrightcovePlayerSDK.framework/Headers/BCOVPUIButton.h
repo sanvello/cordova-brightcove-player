@@ -2,17 +2,29 @@
 // BCOVPUIButton.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2017 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
 #import <UIKit/UIKit.h>
 
-#import "BCOVPUICommon.h"
+#import <BrightcovePlayerSDK/BCOVPUICommon.h>
+
+@class BCOVPUIButton;
+
+/**
+ * A protocol that allows for users to easily override
+ * the defeault values of OOTB control buttons' accessibility labels
+ */
+@protocol BCOVPUIButtonAccessibilityDelegate <NSObject>
+
+- (NSString *)accessibilityLabelForButton:(BCOVPUIButton *)button isPrimaryState:(BOOL)isPrimaryState;
+
+@end
 
 
 /**
- * A subsclass of UIButton that contains two titles,
+ * A subclass of UIButton that contains two titles,
  * a primary and a secondary title.
  * This is used for buttons that change titles when they
  * toggle between two different states, like the play/pause button.
@@ -38,6 +50,8 @@
  * Show the primary or secondary button title text.
  * @param primary YES displays the primary button title; otherwise the secondary title.
  */
-- (void) showPrimaryTitle:(BOOL)primary;
+- (void)showPrimaryTitle:(BOOL)primary;
+
+@property (nonatomic, weak) id<BCOVPUIButtonAccessibilityDelegate> accessibilityDelegate;
 
 @end

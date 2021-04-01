@@ -2,14 +2,14 @@
 // BCOVPUIAdControlView.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2017 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 
-#import "BCOVPUICommon.h"
+#import <BrightcovePlayerSDK/BCOVPUICommon.h>
 
 
 @class BCOVPUIButton;

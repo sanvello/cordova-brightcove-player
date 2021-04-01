@@ -2,7 +2,7 @@
 // BCOVAdvertising.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2017 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -17,6 +17,17 @@
  *  Sent when the content video will be paused to play back an ad.
  */
 extern NSString * const kBCOVPlaybackSessionLifecycleEventWillPauseForAd;
+
+/**
+ * Is this ad skippable. Boolean NSNumber.
+ */
+extern NSString * const kBCOVAdPropertyKeySkippable;
+
+/**
+ * Skip time. NSNumber seconds after which you can skip the ad.
+ * Ignored unless kBCOVAdPropertyKeySkippable is "YES".
+ */
+extern NSString * const kBCOVAdPropertyKeySkipTime;
 
 
 /**
@@ -258,21 +269,3 @@ extern NSString * const kBCOVPlaybackSessionLifecycleEventWillPauseForAd;
 
 @end
 
-
-@interface BCOVAdSequence (Unavailable)
-
-/**
- * Private method.
- */
-- (instancetype)init __attribute__((unavailable("Use `-[BCOVAdSequence initWithAds:properties:]` instead.")));
-
-@end
-
-@interface BCOVAd (Unavailable)
-
-/**
- * Private method.
- */
-- (instancetype)init __attribute__((unavailable("Use `-[BCOVAd initWithTitle:adId:beginTime:duration:properties:]` instead.")));
-
-@end
