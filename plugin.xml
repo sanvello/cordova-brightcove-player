@@ -35,11 +35,15 @@
         <framework src="SystemConfiguration.framework" />
         <framework src="WebKit.framework" />
 
-        <pods-config>
-            <source url="https://github.com/CocoaPods/Specs.git"/>
-            <source url="https://github.com/brightcove/BrightcoveSpecs.git" />
-        </pods-config>
-        <framework src="Brightcove-Player-Core" type="podspec" spec="6.8.6" />
+        <podspec>
+            <config>
+                <source url="https://github.com/brightcove/BrightcoveSpecs.git" />
+                <source url="https://github.com/CocoaPods/Specs.git"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="Brightcove-Player-Core" spec="~> 6.8.6" />
+            </pods>
+        </podspec>
     </platform>
 
     <platform name="android">
