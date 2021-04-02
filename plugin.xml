@@ -39,7 +39,9 @@
             <source url="https://github.com/CocoaPods/Specs.git"/>
             <source url="https://github.com/brightcove/BrightcoveSpecs.git" />
         </pods-config>
-        <pod name="Brightcove-Player-Core" version="6.8.6" />
+        <pods use-frameworks="true">
+            <pod name="Brightcove-Player-Core" version="6.8.6" />
+        </pods>
     </platform>
 
     <platform name="android">
