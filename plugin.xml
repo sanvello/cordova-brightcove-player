@@ -41,7 +41,7 @@
                 <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Brightcove-Player-Core" spec="~> 6.8.6" />
+                <pod name="Brightcove-Player-Core" spec="6.8.6" />
             </pods>
         </podspec>
     </platform>
