@@ -11,7 +11,7 @@ import BrightcovePlayerSDK
 
     //MARK: Cordova Methods
 
-    @objc(play:)
+    @objc(playById:)
     func play(_ command: CDVInvokedUrlCommand) {
         self.brightcoveAccountId = command.arguments[0] as? String ?? ""
         self.brightcovePolicyKey = command.arguments[1] as? String ?? ""
