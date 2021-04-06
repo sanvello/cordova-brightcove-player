@@ -1,6 +1,6 @@
 import BrightcovePlayerSDK
 
-// MARK: Enum declaration
+// MARK: Enum
 
 public enum PlaybackModes {
     case Brightcove, URL
