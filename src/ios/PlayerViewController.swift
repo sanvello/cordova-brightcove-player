@@ -1,5 +1,13 @@
 import BrightcovePlayerSDK
 
+// MARK: Enum declaration
+
+public enum PlaybackModes {
+    case Brightcove, URL
+}
+
+// MARK: Class
+
 class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate {
 
     //MARK: Properties
@@ -7,9 +15,14 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
     private var playbackService: BCOVPlaybackService?
     private var playbackController: BCOVPlaybackController?
     private var videoView: BCOVPUIPlayerView?
+    
     private var kViewControllerPlaybackServicePolicyKey: String?
     private var kViewControllerAccountID: String?
     private var kViewControllerVideoID: String?
+    
+    private var kViewControllerVideoUrl: String?
+    
+    private var kViewControllerPlaybackMode: PlaybackModes!
 
     @IBOutlet weak var videoContainer: UIView!
     @IBOutlet weak var closeButton: UIButton!
@@ -38,6 +51,11 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
     }
 
     //MARK: Internal Methods
+    
+    internal func setVideoUrl(_ videoUrl: String) {
+        self.kViewControllerVideoUrl = videoUrl
+        self.kViewControllerPlaybackMode = PlaybackModes.URL
+    }
 
     internal func setAccountIds(_ policyKey: String, accountId: String) {
         self.kViewControllerPlaybackServicePolicyKey = policyKey
@@ -46,12 +64,18 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
 
     internal func setVideoId(_ videoId: String) {
         self.kViewControllerVideoID = videoId
+        self.kViewControllerPlaybackMode = PlaybackModes.Brightcove
     }
 
     internal func playFromExistingView() {
         self.createPlaybackController()
         self.setupVideoView()
-        self.requestContentFromPlaybackService()
+        
+        if (self.kViewControllerPlaybackMode == PlaybackModes.Brightcove) {
+            self.requestContentFromPlaybackService()
+        } else {
+            self.requestContentFromExternalUrl();
+        }
     }
 
     //MARK: Private Methods
@@ -63,6 +87,7 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
         self.playbackController?.isAutoAdvance = true
         self.playbackController?.isAutoPlay = true
     }
+    
 
     private func requestContentFromPlaybackService() {
         self.playbackService?.findVideo(withVideoID: self.kViewControllerVideoID!, parameters: nil) { (video: BCOVVideo?, jsonResponse: [AnyHashable: Any]?, error: Error?) -> Void in
@@ -72,16 +97,24 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
             }
         }
     }
+    
+    private func requestContentFromExternalUrl() {
+        let video: BCOVVideo = BCOVVideo.init(url: URL(string: self.kViewControllerVideoUrl ?? "")!)
+         self.playbackController?.setVideos([video] as NSArray)
+    }
 
     private func setupVideoView() {
-        self.playbackService = BCOVPlaybackService(accountId: self.kViewControllerAccountID, policyKey: self.kViewControllerPlaybackServicePolicyKey)
         self.videoView = BCOVPUIPlayerView(playbackController: self.playbackController, options: nil, controlsView: BCOVPUIBasicControlView.withVODLayout())
         self.videoView?.delegate = self
         self.videoView?.frame = self.videoContainer.bounds
         self.videoView?.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         self.videoContainer.addSubview(videoView!)
-        self.videoView?.playbackController = playbackController
+        self.videoView?.playbackController = self.playbackController
         self.customizeUI()
+        
+        if (self.kViewControllerPlaybackMode == PlaybackModes.Brightcove) {
+            self.playbackService = BCOVPlaybackService(accountId: self.kViewControllerAccountID, policyKey: self.kViewControllerPlaybackServicePolicyKey)
+        }
     }
 
     private func customizeUI() {
@@ -99,10 +132,22 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
     //MARK: Delegate Methods
     // Check to docs of BCOVPlaybackControllerDelegate to add other delegate methods
 
-    internal func playbackController(_ controller: BCOVPlaybackController!, didAdvanceTo session: BCOVPlaybackSession!) {
-        // Nothing to do
+    internal func playbackController(_ controller: BCOVPlaybackController!, session: BCOVPlaybackSession!) {
     }
-
+    
+    // Delegate for close on finish
+    internal func playbackController(_ controller: BCOVPlaybackController!, didCompletePlaylist playlist: NSFastEnumeration!) {
+        self.dismissPlayerView(AnyClass.self)
+    }
+    // Delegate for showing close button
+    internal func playerView(_ playerView: BCOVPUIPlayerView!, controlsFadingViewDidFadeOut controlsFadingView: UIView!) {
+        self.closeButton.isHidden = true;
+    }
+    // Delegate for hiding close button
+    internal func playerView(_ playerView: BCOVPUIPlayerView!, controlsFadingViewDidFadeIn controlsFadingView: UIView!) {
+        self.closeButton.isHidden = false;
+    }
+    
     //MARK: Actions
 
     @IBAction func dismissPlayerView(_ sender: Any) {

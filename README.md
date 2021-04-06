@@ -34,13 +34,13 @@
 
 - [x] Full screen on start
 
-- [ ] Exit on end
+- [x] Exit on end
 
 - [ ] Playback hooks (on complete, on exit, on pause)
 
-- [ ] Fix white line at the bottom
+- [x] Fix white line at the bottom
 
-- [ ] Landscape mode
+- [x] Landscape mode
 
 - [ ] Add play by url
 
