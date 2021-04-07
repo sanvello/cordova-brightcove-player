@@ -50,12 +50,14 @@
                 android:configChanges="orientation|screenSize"
                 android:launchMode="singleTask"
                 android:alwaysRetainTaskState="true"
-                android:exported="true">
+                android:exported="true"
+                android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
             </activity>
         </config-file>
 
         <source-file src="src/android/BrightcovePlayer.java" target-dir="src/com/brightcove/player" />
         <source-file src="src/android/BrightcoveActivity.java" target-dir="src/com/brightcove/player" />
+        <source-file src="src/android/CordovaBrightcoveCallbackUtil.java" target-dir="src/com/brightcove/player" />
         <source-file src="src/android/player.xml" target-dir="res/layout/" />
 
         <framework src="src/android/build.gradle" custom="true" type="gradleReference" />

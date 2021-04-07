@@ -16,13 +16,13 @@
 
 - [x] Exit on end
 
-- [ ] Playback hooks (on complete, on exit, on pause)
+- [x] Playback callback
 
-- [ ] Fix white line at the bottom
+- [x] Fix white line at the bottom
+
+- [x] Add play by url
 
 - [ ] Landscape mode
-
-- [ ] Add play by url
 
 ### iOS
 
