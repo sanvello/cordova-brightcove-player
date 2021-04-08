@@ -47,5 +47,9 @@
 ## Usage
 
 ```Javascript
-    videoPlayer.play(accountId, policyKey, videoId)
+    videoPlayer.playById(accountId, policyKey, videoId, success, error)
+```
+
+```Javascript
+    videoPlayer.playByUrl(videoUrl, success, error)
 ```
