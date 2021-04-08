@@ -20,10 +20,10 @@ import BrightcovePlayerSDK
             let pluginResult = CDVPluginResult(status: CDVCommandStatus_INVALID_ACTION, messageAs: "Wrong input parameters")
             commandDelegate.send(pluginResult, callbackId: command.callbackId)
         }
-        self.brightcoveAccountId = (command.arguments[0] as? NSNumber)?.stringValue ?? ""
-        self.brightcovePolicyKey = (command.arguments[1] as? String) ?? ""
+        self.brightcoveAccountId = command.arguments[0] as? String ?? ""
+        self.brightcovePolicyKey = command.arguments[1] as? String ?? ""
         
-        let videoId = (command.arguments[2] as? NSNumber)?.stringValue ?? ""
+        let videoId = command.arguments[2] as? String ?? ""
         if (videoId == "") || (self.brightcoveAccountId == "") ||  (self.brightcovePolicyKey == "") {
             let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Wrong input parameters")
             commandDelegate.send(pluginResult, callbackId: command.callbackId)
