@@ -2,7 +2,7 @@
 
 ## Work
 
-- [ ] Rename plugin reference to Cordova.videoPlayer
+- [x] Rename plugin reference to Cordova.videoPlayer
 
 ### Android
 
@@ -36,13 +36,13 @@
 
 - [x] Exit on end
 
-- [ ] Playback hooks (on complete, on exit, on pause)
+- [x] Playback callback
 
 - [x] Fix white line at the bottom
 
 - [x] Landscape mode
 
-- [ ] Add play by url
+- [x] Add play by url
 
 ## Usage
 
