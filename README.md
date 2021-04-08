@@ -47,9 +47,9 @@
 ## Usage
 
 ```Javascript
-    videoPlayer.playById(accountId, policyKey, videoId, success, error)
+    cordova.plugins.videoPlayer.playById(accountId, policyKey, videoId, success, error)
 ```
 
 ```Javascript
-    videoPlayer.playByUrl(videoUrl, success, error)
+    cordova.plugins.videoPlayer.playByUrl(videoUrl, success, error)
 ```
