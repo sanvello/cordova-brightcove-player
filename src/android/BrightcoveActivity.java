@@ -24,8 +24,8 @@ public class BrightcoveActivity extends BrightcovePlayer {
   private static final String LAYOUT_VIEW_KEY = "layout";
   private static final String ID_VIEW_KEY = "id";
 
-  private static final String BACK_STATUS = "Closed";
-  private static final String COMPLETE_STATUS = "Completed";
+  private static final String BACK_STATUS = "closed";
+  private static final String COMPLETE_STATUS = "completed";
 
   private String brightcovePolicyKey;
   private String brightcoveAccountId;
@@ -110,13 +110,13 @@ public class BrightcoveActivity extends BrightcovePlayer {
   private JSONObject callbackBuilder(String status) throws JSONException {
 
     JSONObject jsonObject = new JSONObject();
-    jsonObject.put("Status", status);
+    jsonObject.put("status", status);
 
     if (status.equals(COMPLETE_STATUS)) {
       // When completed current position gets set to 0
-      jsonObject.put("Percentage", 100);
+      jsonObject.put("percentage", 100);
     } else {
-      jsonObject.put("Percentage", this.getPlaybackPercentage());
+      jsonObject.put("percentage", this.getPlaybackPercentage());
     }
 
     return jsonObject;

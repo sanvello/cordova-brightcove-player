@@ -152,13 +152,13 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
             self.playbackController?.pause()
             var callbackMessage: [AnyHashable : Any] = [:]
             
-            callbackMessage["Status"] = self.callBackStatus
+            callbackMessage["status"] = self.callBackStatus
             
-            if (self.callBackStatus == "Completed") {
-                callbackMessage["Percentage"] = 100
+            if (self.callBackStatus == "completed") {
+                callbackMessage["percentage"] = 100
             } else {
                 let percentage = ((self.progress! * 100) / self.duration!).rounded()
-                callbackMessage["Percentage"] = percentage
+                callbackMessage["percentage"] = percentage
             }
             
             self.delegate!.callBackMessage(callbackMessage: callbackMessage)
@@ -174,7 +174,7 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
     
     // Delegate for close on finish
     internal func playbackController(_ controller: BCOVPlaybackController!, didCompletePlaylist playlist: NSFastEnumeration!) {
-        self.callBackStatus = "Completed"
+        self.callBackStatus = "completed"
         self.clearAndCallback()
     }
     // Delegate for showing close button
@@ -197,7 +197,7 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
     //MARK: Actions
     
     @IBAction func dismissPlayerView(_ sender: Any) {
-        self.callBackStatus = "Closed"
+        self.callBackStatus = "closed"
         self.clearAndCallback();
     }
 }
