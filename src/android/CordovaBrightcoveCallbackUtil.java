@@ -3,25 +3,25 @@ package com.brightcove.player;
 import org.apache.cordova.CallbackContext;
 
 public class CordovaBrightcoveCallbackUtil {
-  private CallbackContext callbackContext;
+    private CallbackContext callbackContext;
 
-  private static class CordovaBrightcoveCallbackUtilHolder {
-    public final static CordovaBrightcoveCallbackUtil INSTANCE = new CordovaBrightcoveCallbackUtil();
-  }
+    private CordovaBrightcoveCallbackUtil() {
 
-  private CordovaBrightcoveCallbackUtil() {
+    }
 
-  }
+    public static final CordovaBrightcoveCallbackUtil getInstance() {
+        return CordovaBrightcoveCallbackUtilHolder.INSTANCE;
+    }
 
-  public static final CordovaBrightcoveCallbackUtil getInstance() {
-    return CordovaBrightcoveCallbackUtilHolder.INSTANCE;
-  }
+    public CallbackContext getCallbackContext() {
+        return callbackContext;
+    }
 
-  public CallbackContext getCallbackContext() {
-    return callbackContext;
-  }
+    public void setCallbackContext(CallbackContext callbackContext) {
+        this.callbackContext = callbackContext;
+    }
 
-  public void setCallbackContext(CallbackContext callbackContext) {
-    this.callbackContext = callbackContext;
-  }
+    private static class CordovaBrightcoveCallbackUtilHolder {
+        public final static CordovaBrightcoveCallbackUtil INSTANCE = new CordovaBrightcoveCallbackUtil();
+    }
 }
