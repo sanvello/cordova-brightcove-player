@@ -27,12 +27,6 @@ public class BrightcoveActivity extends BrightcovePlayer {
     private static final String BACK_STATUS = "closed";
     private static final String COMPLETE_STATUS = "completed";
 
-    private String brightcovePolicyKey;
-    private String brightcoveAccountId;
-    private String videoId;
-
-    private String videoUrl;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(this.getIdFromResources(BRIGHTCOVE_ACTIVITY_NAME, LAYOUT_VIEW_KEY));
@@ -51,13 +45,13 @@ public class BrightcoveActivity extends BrightcovePlayer {
         Intent intent = getIntent();
 
         if (intent.hasExtra("video-url")) {
-            this.videoUrl = intent.getStringExtra("video-url");
-            this.playByUrl();
+            String videoUrl = intent.getStringExtra("video-url");
+            this.playByUrl(videoUrl);
         } else {
-            this.brightcovePolicyKey = intent.getStringExtra("brightcove-policy-key");
-            this.brightcoveAccountId = intent.getStringExtra("brightcove-account-id");
-            this.videoId = intent.getStringExtra("video-id");
-            this.playById();
+            String brightcovePolicyKey = intent.getStringExtra("brightcove-policy-key");
+            String brightcoveAccountId = intent.getStringExtra("brightcove-account-id");
+            String videoId = intent.getStringExtra("video-id");
+            this.playById(brightcovePolicyKey, brightcoveAccountId, videoId);
         }
 
     }
@@ -68,15 +62,15 @@ public class BrightcoveActivity extends BrightcovePlayer {
         return resources.getIdentifier(name, defType, packageName);
     }
 
-    private void playByUrl() {
-        Video video = Video.createVideo(this.videoUrl);
+    private void playByUrl(String videoUrl) {
+        Video video = Video.createVideo(videoUrl);
         this.play(video);
     }
 
-    private void playById() {
+    private void playById(String brightcovePolicyKey, String brightcoveAccountId, String videoId) {
         EventEmitter eventEmitter = brightcoveVideoView.getEventEmitter();
-        Catalog catalog = new Catalog(eventEmitter, this.brightcoveAccountId, this.brightcovePolicyKey);
-        catalog.findVideoByID(this.videoId, new VideoListener() {
+        Catalog catalog = new Catalog(eventEmitter, brightcoveAccountId, brightcovePolicyKey);
+        catalog.findVideoByID(videoId, new VideoListener() {
 
             @Override
             public void onVideo(Video video) {
