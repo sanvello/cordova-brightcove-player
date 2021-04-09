@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Player View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="BYZ-38-t0r" customClass="PlayerViewController" customModule="" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
+                <viewController wantsFullScreenLayout="YES" modalPresentationStyle="fullScreen" id="BYZ-38-t0r" customClass="PlayerViewController" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ggi-L2-Oo0" userLabel="videoContainer">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="778"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PRZ-Ds-BvB" userLabel="closeButton">
                                 <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
@@ -35,16 +30,18 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="7jh-sK-HtS"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="ggi-L2-Oo0" secondAttribute="trailing" id="8g4-R1-hok"/>
-                            <constraint firstItem="ggi-L2-Oo0" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="L1z-vn-Y3m"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ggi-L2-Oo0" secondAttribute="bottom" id="OIH-pY-2K6"/>
-                            <constraint firstItem="PRZ-Ds-BvB" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="15" id="W72-To-1wF"/>
+                            <constraint firstItem="7jh-sK-HtS" firstAttribute="trailing" secondItem="ggi-L2-Oo0" secondAttribute="trailing" id="8g4-R1-hok"/>
+                            <constraint firstItem="ggi-L2-Oo0" firstAttribute="leading" secondItem="7jh-sK-HtS" secondAttribute="leading" id="L1z-vn-Y3m"/>
+                            <constraint firstItem="7jh-sK-HtS" firstAttribute="bottom" secondItem="ggi-L2-Oo0" secondAttribute="bottom" id="OIH-pY-2K6"/>
+                            <constraint firstItem="PRZ-Ds-BvB" firstAttribute="top" secondItem="7jh-sK-HtS" secondAttribute="top" constant="15" id="W72-To-1wF"/>
                             <constraint firstItem="ggi-L2-Oo0" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="X14-tX-rq8"/>
-                            <constraint firstItem="PRZ-Ds-BvB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="15" id="tje-fN-Stf"/>
+                            <constraint firstItem="PRZ-Ds-BvB" firstAttribute="leading" secondItem="7jh-sK-HtS" secondAttribute="leading" constant="15" id="tje-fN-Stf"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
                         <outlet property="closeButton" destination="PRZ-Ds-BvB" id="6bb-Rx-MBz"/>
                         <outlet property="videoContainer" destination="ggi-L2-Oo0" id="xtP-dc-Dfg"/>
@@ -55,8 +52,8 @@
             <point key="canvasLocation" x="32.799999999999997" y="35.467980295566505"/>
         </scene>
     </scenes>
+    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
         <image name="back" width="33" height="33"/>
     </resources>
-    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

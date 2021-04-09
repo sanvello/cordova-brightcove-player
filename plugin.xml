@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="cordova-brightcove-player" version="0.2.0">
+        id="cordova-brightcove-player" version="1.0.0">
     <name>CordovaBrightcovePlayer</name>
     <description>Brightcove video player cordova plugin</description>
     <author>Vincent Fu</author>
     <license>Apache 2.0</license>
     <keywords>cordova,brightcove,videoplayer,player</keywords>
     <js-module src="www/videoPlayer.js" name="videoPlayer">
-        <clobbers target="videoPlayer" />
+        <clobbers target="cordova.plugins.videoPlayer" />
     </js-module>
 
     <platform name="ios">
@@ -25,7 +25,6 @@
         <resource-file src="src/ios/BrightcovePlayer.storyboard" />
         <resource-file src="src/ios/back.png" />
 
-        <framework src="src/ios/BrightcovePlayerSDK.framework" embed="true" custom="true"/>
         <framework src="AVFoundation.framework" />
         <framework src="CoreMedia.framework" />
         <framework src="CoreMotion.framework" />
@@ -50,16 +49,17 @@
                 android:name="com.brightcove.player.BrightcoveActivity"
                 android:configChanges="orientation|screenSize"
                 android:launchMode="singleTask"
-                android:label="@string/app_name" >
+                android:alwaysRetainTaskState="true"
+                android:exported="true"
+                android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
             </activity>
         </config-file>
 
         <source-file src="src/android/BrightcovePlayer.java" target-dir="src/com/brightcove/player" />
         <source-file src="src/android/BrightcoveActivity.java" target-dir="src/com/brightcove/player" />
+        <source-file src="src/android/CordovaBrightcoveCallbackUtil.java" target-dir="src/com/brightcove/player" />
         <source-file src="src/android/player.xml" target-dir="res/layout/" />
 
         <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
-
-        <resource-file src="src/android/lib/android-sdk-5.2.0.aar" target="../../libs/android-sdk-5.2.0.aar" />
     </platform>
 </plugin>

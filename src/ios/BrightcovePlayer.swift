@@ -1,68 +1,83 @@
 import BrightcovePlayerSDK
 
-@objc(BrightcovePlayer) class BrightcovePlayer : CDVPlugin {
-
-    //MARK: Properties
-
+@objc(BrightcovePlayer) class BrightcovePlayer : CDVPlugin, BCOVPlayerCallbackDelegate {    
+    
+    // MARK: Private properties
+    
     private var playerView: PlayerViewController?
     private var storyboard: UIStoryboard?
     private var brightcovePolicyKey: String?
     private var brightcoveAccountId: String?
-
-    //MARK: Cordova Methods
-
-    @objc(play:)
-    func play(_ command: CDVInvokedUrlCommand) {
-        let videoId = command.arguments[0] as? String ?? ""
-        if videoId.isEmpty {
-            let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Video ID is not valid")
-            commandDelegate.send(pluginResult, callbackId: "01")
+    private var callbackId: String = ""
+    
+    
+    
+    // MARK: Cordova links
+    
+    @objc(playById:)
+    func playById(_ command: CDVInvokedUrlCommand) {
+        if (command.arguments.count != 3) {
+            let pluginResult = CDVPluginResult(status: CDVCommandStatus_INVALID_ACTION, messageAs: "Wrong input parameters")
+            commandDelegate.send(pluginResult, callbackId: command.callbackId)
         }
-
+        self.brightcoveAccountId = command.arguments[0] as? String ?? ""
+        self.brightcovePolicyKey = command.arguments[1] as? String ?? ""
+        
+        let videoId = command.arguments[2] as? String ?? ""
+        if (videoId == "") || (self.brightcoveAccountId == "") ||  (self.brightcovePolicyKey == "") {
+            let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Wrong input parameters")
+            commandDelegate.send(pluginResult, callbackId: command.callbackId)
+            
+        }
+        self.callbackId = command.callbackId;
         self.playById(videoId)
     }
-
-    @objc(initAccount:)
-    func initAccount(_ command: CDVInvokedUrlCommand) {
-        var pluginResult: CDVPluginResult?
-        self.brightcovePolicyKey = command.arguments[0] as? String ?? ""
-        self.brightcoveAccountId = command.arguments[1] as? String ?? ""
-
-        if self.brightcovePolicyKey?.isEmpty == false && self.brightcoveAccountId?.isEmpty == false {
-            pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "Brightcove player initialised")
-        } else {
-            pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Could not initialise Brightcove player")
+    
+    @objc(playByUrl:)
+    func playByUrl(_ command: CDVInvokedUrlCommand) {
+        if (command.arguments.count != 1) {
+            let pluginResult = CDVPluginResult(status: CDVCommandStatus_INVALID_ACTION, messageAs: "Wrong input parameters")
+            commandDelegate.send(pluginResult, callbackId: command.callbackId)
         }
-
-        commandDelegate.send(pluginResult, callbackId: "01")
-    }
-
-    @objc(switchAccount:)
-    func switchAccount(_ command: CDVInvokedUrlCommand) {
-        self.brightcovePolicyKey = command.arguments[0] as? String ?? ""
-        self.brightcoveAccountId = command.arguments[1] as? String ?? ""
-
-        if self.brightcovePolicyKey?.isEmpty == false && self.brightcoveAccountId?.isEmpty == false {
-            self.playerView?.setAccountIds(self.brightcovePolicyKey!, accountId: self.brightcoveAccountId!)
+        let videoUrl = (command.arguments[0] as? String) ?? ""
+        
+        if (videoUrl == "") {
+            let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Wrong input parameters")
+            commandDelegate.send(pluginResult, callbackId: command.callbackId)
+            
         }
+        self.callbackId = command.callbackId;
+        self.playByUrl(videoUrl)
     }
-
-    //MARK: Private Methods
-
-    private func initPlayerView(_ videoId: String) {
-        if self.playerView == nil {
-            self.storyboard = UIStoryboard(name: "BrightcovePlayer", bundle: nil)
-            self.playerView = self.storyboard?.instantiateInitialViewController() as? PlayerViewController
-            self.playerView?.setAccountIds(self.brightcovePolicyKey!, accountId: self.brightcoveAccountId!)
-            self.playerView?.setVideoId(videoId)
-        } else {
-            self.playerView?.setVideoId(videoId)
-            self.playerView?.playFromExistingView()
-        }
-    }
-
+    
+    // MARK: Private methods
+    
     private func playById(_ videoId: String) {
-        self.initPlayerView(videoId)
+        self.initPlayerView(videoId, mode: PlaybackModes.Brightcove)
+        self.playerView?.delegate = self;
         self.viewController.present(self.playerView!, animated: true)
+    }
+    
+    private func playByUrl(_ videoUrl: String) {
+        self.initPlayerView(videoUrl: videoUrl, mode: PlaybackModes.URL)
+        self.playerView?.delegate = self;
+        self.viewController.present(self.playerView!, animated: true)
+    }
+    
+    private func initPlayerView(_ videoId: String = "", videoUrl: String = "", mode: PlaybackModes) {
+        self.storyboard = UIStoryboard(name: "BrightcovePlayer", bundle: nil)
+        self.playerView = self.storyboard?.instantiateInitialViewController() as? PlayerViewController
+        if (mode == PlaybackModes.Brightcove) {
+            self.playerView?.setAccountIds(self.brightcovePolicyKey!, accountId: self.brightcoveAccountId!)
+            self.playerView?.setVideoId(videoId)
+        } else {
+            self.playerView?.setVideoUrl(videoUrl)
+        }
+    }
+    
+    // MARK: Delegate methods
+    internal func callBackMessage(callbackMessage: [AnyHashable : Any]) {
+        let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: callbackMessage)
+        commandDelegate.send(pluginResult, callbackId: self.callbackId)
     }
 }

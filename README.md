@@ -1,10 +1,55 @@
-## Brightcove video player Cordova plugin
+# Brightcove video player Cordova plugin
 
-A cordova plugin for Brightcove video player. Working with Brightcove iOS SDK 6.x.x and Android SDK 5.x.x
+## Work
 
-### Usage
-`vieoPlayer.init(policyKey, accountId)`: Initialise Brightcove video player.
+- [x] Rename plugin reference to Cordova.videoPlayer
 
-`vieoPlayer.play(videoId)`: Play a video by video id.
+### Android
 
-`videoPlayer.switchAccountTo(policyKey, accountId)`: Switch accounts.
+- [x] Basic video playback
+
+- [x] CC support
+
+- [x] Migrate to gradle for dependencies
+
+- [x] Full screen on start
+
+- [x] Exit on end
+
+- [x] Playback callback
+
+- [x] Fix white line at the bottom
+
+- [x] Add play by url
+
+- [ ] Landscape mode
+
+### iOS
+
+- [x] Make it work
+
+- [x] CC support
+
+- [x] Migrate to cocoapods (migrated on main, look into updatedPodsFile)
+
+- [x] Full screen on start
+
+- [x] Exit on end
+
+- [x] Playback callback
+
+- [x] Fix white line at the bottom
+
+- [x] Landscape mode
+
+- [x] Add play by url
+
+## Usage
+
+```Javascript
+    cordova.plugins.videoPlayer.playById(accountId, policyKey, videoId, success, error)
+```
+
+```Javascript
+    cordova.plugins.videoPlayer.playByUrl(videoUrl, success, error)
+```
