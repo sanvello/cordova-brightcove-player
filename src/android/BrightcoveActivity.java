@@ -33,7 +33,7 @@ public class BrightcoveActivity extends BrightcovePlayer {
     private static final String OFFLINE_STATUS = "OFFLINE";
 
     private ProgressBar progressBar;
-    private Button button;
+    private Button onScreenBackButton;
 
     private CountDownTimer timeout;
     private boolean offline = false;
@@ -43,19 +43,14 @@ public class BrightcoveActivity extends BrightcovePlayer {
         setContentView(this.getIdFromResources(BRIGHTCOVE_ACTIVITY_NAME, LAYOUT_VIEW_KEY));
         brightcoveVideoView = (BrightcoveExoPlayerVideoView) findViewById(this.getIdFromResources(BRIGHTCOVE_VIEW_NAME, ID_VIEW_KEY));
         this.progressBar = findViewById(this.getIdFromResources("progressBar", ID_VIEW_KEY));
-        this.button = findViewById(this.getIdFromResources("button1", ID_VIEW_KEY));
-        this.button.setOnClickListener(e -> {
-            if (this.offline) {
-                this.timeout.cancel();
-            }
-            this.finish();
-            this.sendCallback(BACK_STATUS);
+        this.onScreenBackButton = findViewById(this.getIdFromResources("button1", ID_VIEW_KEY));
+        this.onScreenBackButton.setOnClickListener(e -> {
+            this.onFinish(BACK_STATUS);
         });
 
         brightcoveVideoView.addListener("completed",
                 (e -> {
-                    this.sendCallback(COMPLETE_STATUS);
-                    this.finish();
+                    this.onFinish(COMPLETE_STATUS);
                 }));
 
         EventEmitter eventEmitter = brightcoveVideoView.getEventEmitter();
@@ -92,7 +87,7 @@ public class BrightcoveActivity extends BrightcovePlayer {
 
                     @Override
                     public void onFinish() {
-                        onOffline();
+                        onFinish(OFFLINE_STATUS);
                     }
                 }.start();
             }
@@ -148,8 +143,7 @@ public class BrightcoveActivity extends BrightcovePlayer {
 
     @Override
     public void onBackPressed() {
-        this.sendCallback(BACK_STATUS);
-        this.finish();
+        this.onFinish(BACK_STATUS);
     }
 
     private void sendCallback(String status) {
@@ -181,8 +175,11 @@ public class BrightcoveActivity extends BrightcovePlayer {
         return (brightcoveVideoView.getCurrentPosition() * 100) / brightcoveVideoView.getDuration();
     }
 
-    public void onOffline() {
-        this.sendCallback(OFFLINE_STATUS);
+    public void onFinish(String finishStatus) {
+        if (this.offline) {
+            this.timeout.cancel();
+        }
+        this.sendCallback(finishStatus);
         this.finish();
     }
 }
