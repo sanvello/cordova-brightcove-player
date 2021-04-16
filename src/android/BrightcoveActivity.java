@@ -3,6 +3,10 @@ package com.brightcove.player;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.VideoListener;
@@ -26,17 +30,74 @@ public class BrightcoveActivity extends BrightcovePlayer {
 
     private static final String BACK_STATUS = "closed";
     private static final String COMPLETE_STATUS = "completed";
+    private static final String OFFLINE_STATUS = "OFFLINE";
+
+    private ProgressBar progressBar;
+    private Button button;
+
+    private CountDownTimer timeout;
+    private boolean offline = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(this.getIdFromResources(BRIGHTCOVE_ACTIVITY_NAME, LAYOUT_VIEW_KEY));
         brightcoveVideoView = (BrightcoveExoPlayerVideoView) findViewById(this.getIdFromResources(BRIGHTCOVE_VIEW_NAME, ID_VIEW_KEY));
+        this.progressBar = findViewById(this.getIdFromResources("progressBar", ID_VIEW_KEY));
+        this.button = findViewById(this.getIdFromResources("button1", ID_VIEW_KEY));
+        this.button.setOnClickListener(e -> {
+            if (this.offline) {
+                this.timeout.cancel();
+            }
+            this.finish();
+            this.sendCallback(BACK_STATUS);
+        });
 
         brightcoveVideoView.addListener("completed",
-            (e -> {
-                this.sendCallback(COMPLETE_STATUS);
-                this.finish();
-            }));
+                (e -> {
+                    this.sendCallback(COMPLETE_STATUS);
+                    this.finish();
+                }));
+
+        EventEmitter eventEmitter = brightcoveVideoView.getEventEmitter();
+        eventEmitter.on("hideMediaControls", event -> {
+            this.button.setVisibility(View.GONE);
+        });
+
+        eventEmitter.on("showMediaControls", event -> {
+            this.button.setVisibility(View.VISIBLE);
+        });
+
+        eventEmitter.on("bufferingCompleted", event -> {
+            this.progressBar.setVisibility(View.GONE);
+        });
+
+        eventEmitter.on("bufferingStarted", event -> {
+            this.progressBar.setVisibility(View.VISIBLE);
+        });
+
+        eventEmitter.on("error", event -> {
+            if (!this.offline) {
+                this.offline = true;
+                this.progressBar.setVisibility(View.VISIBLE);
+                this.timeout = new CountDownTimer(60000, 5000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        if (!offline) {
+                            progressBar.setVisibility(View.GONE);
+                            this.cancel();
+                        } else {
+                            offline = false;
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        onOffline();
+                    }
+                }.start();
+            }
+        });
+        brightcoveVideoView.setEventEmitter(eventEmitter);
 
         super.onCreate(savedInstanceState);
         super.fullScreen();
@@ -118,5 +179,10 @@ public class BrightcoveActivity extends BrightcovePlayer {
 
     private int getPlaybackPercentage() {
         return (brightcoveVideoView.getCurrentPosition() * 100) / brightcoveVideoView.getDuration();
+    }
+
+    public void onOffline() {
+        this.sendCallback(OFFLINE_STATUS);
+        this.finish();
     }
 }

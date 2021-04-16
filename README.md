@@ -24,6 +24,12 @@
 
 - [ ] Landscape mode
 
+- [x] On screen back button
+
+- [x] Loading spinner on buffering
+
+- [x] Timeout on lost connection after 60s
+
 ### iOS
 
 - [x] Make it work
