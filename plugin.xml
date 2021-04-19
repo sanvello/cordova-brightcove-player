@@ -17,7 +17,7 @@
             </feature>
         </config-file>
 
-	<framework src="src/ios/BrightcovePlayerSDK.framework" embed="true" custom="true"/>	
+	<framework src="src/ios/BrightcovePlayerSDK.framework" custom="true"/>	
 
         <header-file src="src/ios/bridging-header.h" />
 
