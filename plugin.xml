@@ -17,7 +17,7 @@
             </feature>
         </config-file>
 
-	<framework src="src/ios/BrightcovePlayerSDK.framework" custom="true" link="true"/>	
+	    <framework src="src/ios/BrightcovePlayerSDK.framework" custom="true" link="true"/>	
 
         <header-file src="src/ios/bridging-header.h" />
 
@@ -26,6 +26,7 @@
 
         <resource-file src="src/ios/BrightcovePlayer.storyboard" />
         <resource-file src="src/ios/back.png" />
+        <resource-file src="src/ios/bcovpuiiconfont.ttf" />
 
         <framework src="AVFoundation.framework" />
         <framework src="CoreMedia.framework" />
