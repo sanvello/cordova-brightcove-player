@@ -45,21 +45,21 @@ public class BrightcoveActivity extends BrightcovePlayer {
         this.progressBar = findViewById(this.getIdFromResources("progressBar", ID_VIEW_KEY));
         this.onScreenBackButton = findViewById(this.getIdFromResources("button1", ID_VIEW_KEY));
         this.onScreenBackButton.setOnClickListener(e -> {
-            this.onFinish(BACK_STATUS);
+            this.onPlayerFinish(BACK_STATUS);
         });
 
         brightcoveVideoView.addListener("completed",
                 (e -> {
-                    this.onFinish(COMPLETE_STATUS);
+                    this.onPlayerFinish(COMPLETE_STATUS);
                 }));
 
         EventEmitter eventEmitter = brightcoveVideoView.getEventEmitter();
         eventEmitter.on("hideMediaControls", event -> {
-            this.button.setVisibility(View.GONE);
+            this.onScreenBackButton.setVisibility(View.GONE);
         });
 
         eventEmitter.on("showMediaControls", event -> {
-            this.button.setVisibility(View.VISIBLE);
+            this.onScreenBackButton.setVisibility(View.VISIBLE);
         });
 
         eventEmitter.on("bufferingCompleted", event -> {
@@ -87,7 +87,7 @@ public class BrightcoveActivity extends BrightcovePlayer {
 
                     @Override
                     public void onFinish() {
-                        onFinish(OFFLINE_STATUS);
+                        onPlayerFinish(OFFLINE_STATUS);
                     }
                 }.start();
             }
@@ -143,7 +143,7 @@ public class BrightcoveActivity extends BrightcovePlayer {
 
     @Override
     public void onBackPressed() {
-        this.onFinish(BACK_STATUS);
+        this.onPlayerFinish(BACK_STATUS);
     }
 
     private void sendCallback(String status) {
@@ -175,7 +175,7 @@ public class BrightcoveActivity extends BrightcovePlayer {
         return (brightcoveVideoView.getCurrentPosition() * 100) / brightcoveVideoView.getDuration();
     }
 
-    public void onFinish(String finishStatus) {
+    public void onPlayerFinish(String finishStatus) {
         if (this.offline) {
             this.timeout.cancel();
         }
