@@ -38,6 +38,7 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
     
     @IBOutlet weak var videoContainer: UIView!
     @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     
     required init?(coder aDecoder: NSCoder) {
@@ -47,7 +48,7 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.activityIndicator.startAnimating()
         self.setupVideoView()
         
         if (self.kViewControllerPlaybackMode == PlaybackModes.Brightcove) {
@@ -193,6 +194,21 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
         
         self.progress = progress;
     }
+    internal func playbackController(_ controller: BCOVPlaybackController!, playbackSession session: BCOVPlaybackSession!, didReceive lifecycleEvent: BCOVPlaybackSessionLifecycleEvent!) {
+        if (lifecycleEvent.eventType.elementsEqual(kBCOVPlaybackSessionLifecycleEventPlaybackLikelyToKeepUp)) {
+            self.activityIndicator.stopAnimating()
+        }
+        if (lifecycleEvent.eventType.elementsEqual(kBCOVPlaybackSessionLifecycleEventPlaybackRecovered)) {
+            self.activityIndicator.stopAnimating()
+        }
+        if (lifecycleEvent.eventType.elementsEqual(kBCOVPlaybackSessionLifecycleEventPlaybackStalled)) {
+            self.activityIndicator.startAnimating()
+        }
+        if (lifecycleEvent.eventType.elementsEqual(kBCOVPlaybackSessionLifecycleEventFailedToPlayToEndTime)) {
+            self.callBackStatus = "offline";
+            self.clearAndCallback()
+        }
+    }
     
     //MARK: Actions
     
@@ -201,3 +217,4 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
         self.clearAndCallback();
     }
 }
+
