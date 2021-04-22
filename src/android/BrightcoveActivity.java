@@ -2,6 +2,7 @@ package com.brightcove.player;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -10,11 +11,15 @@ import android.widget.ProgressBar;
 
 import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.VideoListener;
+import com.brightcove.player.event.Event;
 import com.brightcove.player.event.EventEmitter;
 import com.brightcove.player.mediacontroller.BrightcoveMediaControlRegistry;
 import com.brightcove.player.mediacontroller.BrightcoveMediaController;
+import com.brightcove.player.mediacontroller.buttons.AudioTracksButtonController;
 import com.brightcove.player.mediacontroller.buttons.ButtonController;
 import com.brightcove.player.mediacontroller.buttons.FullScreenButtonController;
+import com.brightcove.player.model.DeliveryType;
+import com.brightcove.player.model.SourceCollection;
 import com.brightcove.player.model.Video;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.brightcove.player.view.BrightcovePlayer;
@@ -24,7 +29,9 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BrightcoveActivity extends BrightcovePlayer {
 
@@ -59,8 +66,6 @@ public class BrightcoveActivity extends BrightcovePlayer {
             }
         }
 
-        brightcoveVideoView.setMediaController(mediaController);
-
         this.progressBar = findViewById(this.getIdFromResources("progressBar", ID_VIEW_KEY));
         this.onScreenBackButton = findViewById(this.getIdFromResources("button1", ID_VIEW_KEY));
         this.onScreenBackButton.setOnClickListener(e -> {
@@ -72,43 +77,43 @@ public class BrightcoveActivity extends BrightcovePlayer {
                     this.onPlayerFinish(COMPLETE_STATUS);
                 }));
 
-        EventEmitter eventEmitter = brightcoveVideoView.getEventEmitter();
-        eventEmitter.on("hideMediaControls", event -> {
+        brightcoveVideoView.addListener("didPlay",
+                (e -> {
+                    this.progressBar.setVisibility(View.GONE);
+                    if (this.offline) {
+                        this.offline = false;
+                        this.timeout.cancel();
+                    }
+                }));
+
+        brightcoveVideoView.getBrightcoveMediaController().addListener("hideMediaControls", e -> {
             this.onScreenBackButton.setVisibility(View.GONE);
         });
-
-        eventEmitter.on("didHideMediaControls", event -> {
+        brightcoveVideoView.getBrightcoveMediaController().addListener("showMediaControls", e -> {
+            this.onScreenBackButton.setVisibility(View.VISIBLE);
+        });
+        brightcoveVideoView.getBrightcoveMediaController().addListener("didHideMediaControls", e -> {
             this.onScreenBackButton.setVisibility(View.GONE);
         });
-        eventEmitter.on("didShowMediaControls", event -> {
+        brightcoveVideoView.getBrightcoveMediaController().addListener("didShowMediaControls", e -> {
             this.onScreenBackButton.setVisibility(View.VISIBLE);
         });
-
-        eventEmitter.on("showMediaControls", event -> {
-            this.onScreenBackButton.setVisibility(View.VISIBLE);
-        });
-
-        eventEmitter.on("bufferingCompleted", event -> {
+        brightcoveVideoView.getBrightcoveMediaController().addListener("bufferingCompleted", event -> {
             this.progressBar.setVisibility(View.GONE);
         });
 
-        eventEmitter.on("bufferingStarted", event -> {
+        brightcoveVideoView.getBrightcoveMediaController().addListener("bufferingStarted", event -> {
             this.progressBar.setVisibility(View.VISIBLE);
         });
 
-        eventEmitter.on("error", event -> {
+        brightcoveVideoView.getBrightcoveMediaController().addListener("error", event -> {
             if (!this.offline) {
                 this.offline = true;
                 this.progressBar.setVisibility(View.VISIBLE);
                 this.timeout = new CountDownTimer(60000, 5000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        if (!offline) {
-                            progressBar.setVisibility(View.GONE);
-                            this.cancel();
-                        } else {
-                            offline = false;
-                        }
+                        brightcoveVideoView.start();
                     }
 
                     @Override
@@ -118,7 +123,6 @@ public class BrightcoveActivity extends BrightcovePlayer {
                 }.start();
             }
         });
-        brightcoveVideoView.setEventEmitter(eventEmitter);
 
         super.onCreate(savedInstanceState);
         super.fullScreen();
@@ -159,7 +163,6 @@ public class BrightcoveActivity extends BrightcovePlayer {
             public void onVideo(Video video) {
                 brightcoveVideoView.add(video);
                 brightcoveVideoView.start();
-
 
             }
         });
