@@ -11,6 +11,10 @@ import android.widget.ProgressBar;
 import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.VideoListener;
 import com.brightcove.player.event.EventEmitter;
+import com.brightcove.player.mediacontroller.BrightcoveMediaControlRegistry;
+import com.brightcove.player.mediacontroller.BrightcoveMediaController;
+import com.brightcove.player.mediacontroller.buttons.ButtonController;
+import com.brightcove.player.mediacontroller.buttons.FullScreenButtonController;
 import com.brightcove.player.model.Video;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.brightcove.player.view.BrightcovePlayer;
@@ -19,6 +23,8 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class BrightcoveActivity extends BrightcovePlayer {
 
@@ -42,6 +48,19 @@ public class BrightcoveActivity extends BrightcovePlayer {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(this.getIdFromResources(BRIGHTCOVE_ACTIVITY_NAME, LAYOUT_VIEW_KEY));
         brightcoveVideoView = (BrightcoveExoPlayerVideoView) findViewById(this.getIdFromResources(BRIGHTCOVE_VIEW_NAME, ID_VIEW_KEY));
+        BrightcoveMediaController mediaController = new BrightcoveMediaController(brightcoveVideoView);
+        BrightcoveMediaControlRegistry registry = mediaController.getMediaControlRegistry();
+        List<ButtonController> controllers = registry.getButtonControllers();
+        registry.clear();
+
+        for (ButtonController buttonController : controllers) {
+            if (!buttonController.getClass().equals(FullScreenButtonController.class)) {
+                registry.register(buttonController);
+            }
+        }
+
+        brightcoveVideoView.setMediaController(mediaController);
+
         this.progressBar = findViewById(this.getIdFromResources("progressBar", ID_VIEW_KEY));
         this.onScreenBackButton = findViewById(this.getIdFromResources("button1", ID_VIEW_KEY));
         this.onScreenBackButton.setOnClickListener(e -> {
@@ -56,6 +75,13 @@ public class BrightcoveActivity extends BrightcovePlayer {
         EventEmitter eventEmitter = brightcoveVideoView.getEventEmitter();
         eventEmitter.on("hideMediaControls", event -> {
             this.onScreenBackButton.setVisibility(View.GONE);
+        });
+
+        eventEmitter.on("didHideMediaControls", event -> {
+            this.onScreenBackButton.setVisibility(View.GONE);
+        });
+        eventEmitter.on("didShowMediaControls", event -> {
+            this.onScreenBackButton.setVisibility(View.VISIBLE);
         });
 
         eventEmitter.on("showMediaControls", event -> {
@@ -98,6 +124,7 @@ public class BrightcoveActivity extends BrightcovePlayer {
         super.fullScreen();
         super.setImmersive(true);
 
+
         Intent intent = getIntent();
 
         if (intent.hasExtra("video-url")) {
@@ -132,6 +159,8 @@ public class BrightcoveActivity extends BrightcovePlayer {
             public void onVideo(Video video) {
                 brightcoveVideoView.add(video);
                 brightcoveVideoView.start();
+
+
             }
         });
     }
