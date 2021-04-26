@@ -1,6 +1,7 @@
 package com.brightcove.player;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -208,6 +209,8 @@ public class BrightcoveActivity extends BrightcovePlayer {
     }
 
     public void onPlayerFinish(String finishStatus) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         if (this.offline) {
             this.timeout.cancel();
         }
