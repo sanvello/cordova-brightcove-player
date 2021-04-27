@@ -204,6 +204,9 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
         if (lifecycleEvent.eventType.elementsEqual(kBCOVPlaybackSessionLifecycleEventPlaybackStalled)) {
             self.activityIndicator.startAnimating()
         }
+        if (lifecycleEvent.eventType.elementsEqual(kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty)) {
+            self.activityIndicator.startAnimating()
+        }
         if (lifecycleEvent.eventType.elementsEqual(kBCOVPlaybackSessionLifecycleEventFailedToPlayToEndTime)) {
             self.callBackStatus = "offline";
             self.clearAndCallback()
