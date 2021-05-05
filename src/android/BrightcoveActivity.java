@@ -181,10 +181,12 @@ public class BrightcoveActivity extends BrightcovePlayer {
 
     private void sendCallback(String status) {
         CallbackContext callbackContext = CordovaBrightcoveCallbackUtil.getInstance().getCallbackContext();
-        try {
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, this.callbackBuilder(status)));
-        } catch (JSONException exception) {
-            callbackContext.error("Error building callback");
+        if (callbackContext != null) {
+            try {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, this.callbackBuilder(status)));
+            } catch (JSONException exception) {
+                callbackContext.error("Error building callback");
+            }
         }
     }
 
