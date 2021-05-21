@@ -30,8 +30,8 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
     
     private var kViewControllerPlaybackMode: PlaybackModes!
     
-    private var duration: TimeInterval?;
-    private var progress: TimeInterval?;
+    private var duration: TimeInterval? = 0;
+    private var progress: TimeInterval? = 0;
     private var callBackStatus: String = "";
     
     var delegate: BCOVPlayerCallbackDelegate?;
@@ -158,12 +158,8 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
             
             if (self.callBackStatus == "completed") {
                 percentage = 100
-            } else if let progress = self.progress, let duration = self.duration, duration != 0 {
+            } else if let progress = self.progress, progress != 0, let duration = self.duration, duration != 0 {
                 percentage = ((progress * 100) / duration).rounded()
-            }
-
-            if (Double.infinity.isEqual(to: percentage)) {
-                percentage = 100;
             }
             
             callbackMessage["percentage"] = percentage
