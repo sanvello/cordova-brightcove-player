@@ -158,7 +158,7 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
             
             if (self.callBackStatus == "completed") {
                 percentage = 100
-            } else if let progress = self.progress, progress != 0, let duration = self.duration, duration != 0 {
+            } else if let progress = self.progress, progress != 0, !abs(progress).isEqual(to: Double.infinity), let duration = self.duration, duration != 0, !abs(duration).isEqual(to: Double.infinity) {
                 percentage = ((progress * 100) / duration).rounded()
             }
             
