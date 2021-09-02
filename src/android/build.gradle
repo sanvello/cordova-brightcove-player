@@ -2,7 +2,7 @@ repositories {
     google()
     jcenter()
     maven {
-      url 'http://repo.brightcove.com/releases'
+      url 'https://repo.brightcove.com/releases'
     }
 }
 
