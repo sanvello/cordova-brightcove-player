@@ -108,6 +108,12 @@ class PlayerViewController: UIViewController, BCOVPlaybackControllerDelegate, BC
     
     
     private func requestContentFromPlaybackService() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.default, options: [AVAudioSession.CategoryOptions.duckOthers, AVAudioSession.CategoryOptions.interruptSpokenAudioAndMixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+        // We don't want to crash the app, but if the settings fail we would like to still run the video    
+        }
         self.playbackService?.findVideo(withVideoID: self.kViewControllerVideoID!, parameters: nil) { (video: BCOVVideo?, jsonResponse: [AnyHashable: Any]?, error: Error?) -> Void in
             
             if let video = video {
