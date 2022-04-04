@@ -6,5 +6,5 @@ repositories {
 }
 
 dependencies {
-    implementation "com.brightcove.player:exoplayer2:6.17.0"
+    implementation "com.brightcove.player:exoplayer2:6.18.2"
 }
