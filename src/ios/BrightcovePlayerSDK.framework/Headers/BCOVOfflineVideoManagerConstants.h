@@ -2,7 +2,7 @@
 // BCOVOfflineVideoManagerConstants.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2022 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -64,6 +64,8 @@ extern NSString * const kBCOVOfflineVideoManagerAnalyticsStorageFullWarningNotif
  * If @(NO), cellular connections will not be allowed.
  * Default value is @(NO).
  * Corresponds directly to NSURLSessionConfiguration's allowCellularAccess property.
+ * Changing this value will not have an effect on active downloads; only downloads
+ * initialized after the value has been changed will be affected.
  */
 extern NSString * const kBCOVOfflineVideoManagerAllowsCellularDownloadKey;
 

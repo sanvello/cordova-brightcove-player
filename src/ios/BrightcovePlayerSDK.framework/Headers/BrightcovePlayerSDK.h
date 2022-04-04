@@ -2,7 +2,7 @@
 // BrightcovePlayerSDK.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2022 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -15,7 +15,7 @@
 // Playback API
 #import <BrightcovePlayerSDK/BCOVPlaybackService.h>
 #import <BrightcovePlayerSDK/BCOVPlaybackServiceRequestFactory.h>
-#import <BrightcovePlayerSDK/NSDictionary+BCOVURLSupport.h>
+#import <BrightcovePlayerSDK/NSDictionary-BCOVURLSupport.h>
 
 // Management
 #import <BrightcovePlayerSDK/BCOVGlobalConfiguration.h>

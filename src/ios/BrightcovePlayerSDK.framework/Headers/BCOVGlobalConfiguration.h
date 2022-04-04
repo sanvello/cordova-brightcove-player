@@ -2,7 +2,7 @@
 // BCOVGlobalConfiguration.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2022 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -30,6 +30,21 @@ NS_ASSUME_NONNULL_BEGIN
  * Returns the shared Global Configuration singleton.
  */
 + (BCOVGlobalConfiguration *)sharedConfig;
+
+#pragma mark - General Configurations
+
+/**
+ * Allow playback when device is on cellular data.
+ *
+ * Changing this value during playback will not stop playback of the current video
+ * if the device changes over to cellular data.
+ *
+ * Example Usage:
+ * BCOVGlobalConfiguration.sharedConfig.allowsCellularPlayback = NO;
+ *
+ * Default value is YES.
+ */
+@property (nonatomic, readwrite) BOOL allowsCellularPlayback;
 
 #pragma mark - China Delivery
 

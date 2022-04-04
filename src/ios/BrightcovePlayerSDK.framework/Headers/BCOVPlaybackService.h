@@ -2,7 +2,7 @@
 // BCOVPlaybackService.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2022 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -136,6 +136,11 @@ extern NSString * const kBCOVPlaybackServiceParameterKeyDeliveryConfigId;
  * If set to nil, the default NSURLSession will be re-created.
  */
 @property (nonatomic, strong) NSURLSession *sharedURLSession;
+
+/**
+ * The watermarking token for use with Forensic Watermarking
+ */
+@property (nonatomic, copy) NSString *watermarkingToken;
 
 /**
  * Initializes a BCOVPlaybackService. It uses the accountId and policyKey

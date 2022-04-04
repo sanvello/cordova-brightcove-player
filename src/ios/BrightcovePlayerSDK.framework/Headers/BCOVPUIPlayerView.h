@@ -2,7 +2,7 @@
 // BCOVPUIPlayerView.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2022 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -327,7 +327,7 @@ typedef NS_ENUM(NSUInteger, BCOVPUIVideo360NavigationMethod) {
  *
  * NOTE: The IMA SDK uses its own internal behavior for the Learn More button.
  * Thus this property will have no effect with IMA ads.
- * See `webOpenerPresentingController` in the `IMAAdsRenderingSettings` class
+ * See `linkOpenerPresentingController` in the `IMAAdsRenderingSettings` class
  * for more information.
  */
 @property (nonatomic, assign) BCOVPUILearnMoreButtonBrowserStyle learnMoreButtonBrowserStyle;
@@ -403,6 +403,36 @@ typedef NS_ENUM(NSUInteger, BCOVPUIVideo360NavigationMethod) {
  * for the current video.
  */
 @property (nonatomic, assign) BOOL automaticControlTypeSelection;
+
+/**
+ * When enabled a shutter view will be added and faded-out when control
+ * views are changed between videos. If this is not enabled you may see
+ * a flicker between videos when control views are swapped.
+ * Defaults to `YES`.
+ */
+@property (nonatomic, assign) BOOL automaticControlTypeSelectionUsesShutter;
+
+/**
+ * The fade-out time for the shutter view used between videos when
+ * automaticControlTypeSelection and automaticControlTypeSelectionUsesShutter
+ * are enabled.
+ * Defaults to `0.5`
+ */
+@property (nonatomic, assign) float automaticControlTypeSelectionShutterFadeTime;
+
+/**
+ * When enabled, this property will effectively disable the controls from
+ * hiding during playback. Typically used for audio-only playback.
+ * Defaults to 'NO'.
+ */
+@property (nonatomic, assign) BOOL keepControlsVisible;
+
+/**
+ * The UIViewContentMode for the poster image UIImageView which is displayed
+ * for audio-only streams.
+ * Defaults to `UIViewContentModeScaleAspectFit`.
+ */
+@property (nonatomic, assign) UIViewContentMode contentModeForPosterImage;
 
 @end
 

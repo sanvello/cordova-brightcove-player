@@ -2,7 +2,7 @@
 // BCOVAdvertising.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2022 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -28,6 +28,16 @@ extern NSString * const kBCOVAdPropertyKeySkippable;
  * Ignored unless kBCOVAdPropertyKeySkippable is "YES".
  */
 extern NSString * const kBCOVAdPropertyKeySkipTime;
+
+/**
+ * Array of NSStrings representing Clickthrough URLs
+ */
+extern NSString * const kBCOVAdPropertyKeyClickthroughURLs;
+
+/**
+ * Array of NSStrings representing Tracking URLs
+ */
+extern NSString * const kBCOVAdPropertyKeyTrackingURLs;
 
 
 /**

@@ -2,7 +2,7 @@
 // BCOVPlaybackSession.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2022 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -16,6 +16,12 @@
 
 /**
  * The video loaded successfully and is ready to play.
+ *
+ * If `autoPlay` is enabled It is possible for this event to be triggered
+ * after seeing `kBCOVPlaybackSessionLifecycleEventPlay`. If you require
+ * this event to be triggered prior to `kBCOVPlaybackSessionLifecycleEventPlay`
+ * you can disable `autoPlay` and call `play` on your `BCOVPlaybackController`
+ * after observing `kBCOVPlaybackSessionLifecycleEventReady`. 
  */
 extern NSString * const kBCOVPlaybackSessionLifecycleEventReady;
 
@@ -113,6 +119,16 @@ extern NSString * const kBCOVPlaybackSessionLifecycleEventPlaybackLikelyToKeepUp
 extern NSString * const kBCOVPlaybackSessionLifecycleEventTerminate;
 
 /**
+ * A cast session has started.
+ */
+extern NSString * const kBCOVPlaybackSessionLifecycleEventStartCastSession;
+
+/**
+ * A cast session has ended.
+ */
+extern NSString * const kBCOVPlaybackSessionLifecycleEventEndCastSession;
+
+/**
  * A generic error has occurred. The event properties may contain the underlying
  * error keyed by kBCOVPlaybackSessionEventKeyError.
  */
@@ -160,6 +176,12 @@ extern NSString * const kBCOVPlaybackSessionLifecycleEventAdResume;
 extern NSString * const kBCOVPlaybackSessionLifecycleEventAdSkipped;
 
 /**
+ * The thumbnail seeking asset failed to load. The event properties may contain the underlying
+ * error keyed by kBCOVPlaybackSessionEventKeyError.
+ */
+extern NSString * const kBCOVPlaybackSessionLifecycleEventThumbnailAssetFailedToLoad;
+
+/**
  * The key for the error in the Event properties.
  */
 extern NSString * const kBCOVPlaybackSessionEventKeyError;
@@ -202,6 +224,11 @@ extern const NSInteger kBCOVPlaybackSessionErrorCodeFailedToPlayToEnd;
  * No playable Source was available for this Video.
  */
 extern const NSInteger kBCOVPlaybackSessionErrorCodeNoPlayableSource;
+
+/**
+ * No WiFi network is available and allowsCellularPlayback is disabled.
+ */
+extern const NSInteger kBCOVPlaybackSessionErrorCodeWifiUnavailable;
 
 
 /**

@@ -2,7 +2,7 @@
 // BCOVPlaybackServiceRequestFactory.h
 // BrightcovePlayerSDK
 //
-// Copyright (c) 2021 Brightcove, Inc. All rights reserved.
+// Copyright (c) 2022 Brightcove, Inc. All rights reserved.
 // License: https://accounts.brightcove.com/en/terms-and-conditions
 //
 
@@ -25,6 +25,16 @@ extern NSString * const kBCOVEdgePlaybackAuthServiceBaseURL;
  * Videocloud Policy Key
  */
 @property (nonatomic, copy, readonly) NSString *policyKey;
+
+/*
+ * Auth Token for EPA/PAS
+ */
+@property (nonatomic, copy, readonly) NSString *authToken;
+
+/*
+ * Base URL for Generic Stream Concurrency
+ */
+@property (nonatomic, copy, readonly) NSString *gscBaseURLStr;
 
 /**
  * NSDictionary of additional HTTP request headers set on each NSURLRequest.
@@ -70,7 +80,21 @@ extern NSString * const kBCOVEdgePlaybackAuthServiceBaseURL;
  * @param authBaseURLStr A string URL to the API that will be used for EPA/PAS requests.
  * @return The initialized BCOVPlaybackServiceRequestFactory.
  */
-- (instancetype)initWithAccountId:(NSString *)accountId policyKey:(NSString *)policyKey baseURLStr:(NSString *)baseURLStr  authBaseURLStr:(NSString *)authBaseURLStr NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithAccountId:(NSString *)accountId policyKey:(NSString *)policyKey baseURLStr:(NSString *)baseURLStr  authBaseURLStr:(NSString *)authBaseURLStr;
+
+/**
+ * Returns an initialized instance with the specified token, account, and base URL string.
+ *
+ * If using the Edge Playback Service, the policyKey value should be nil
+ *
+ * @param accountId A Video Cloud account.
+ * @param policyKey A Video Cloud CMS policy.
+ * @param baseURLStr A string URL to the API.
+ * @param authBaseURLStr A string URL to the API that will be used for EPA/PAS requests.
+ * @param gscBaseURLStr A String URL to the API that will be used for Generic Stream Concurrency requests.
+ * @return The initialized BCOVPlaybackServiceRequestFactory.
+ */
+- (instancetype)initWithAccountId:(NSString *)accountId policyKey:(NSString *)policyKey baseURLStr:(NSString *)baseURLStr  authBaseURLStr:(NSString *)authBaseURLStr gscBaseURLStr:(NSString *)gscBaseURLStr NS_DESIGNATED_INITIALIZER;
 
 /**
  * Constructs a request for a playlist by the playlist id.
