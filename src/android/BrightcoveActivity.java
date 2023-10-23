@@ -153,6 +153,7 @@ public class BrightcoveActivity extends BrightcovePlayer {
     private void playByUrl(String videoUrl) {
         Video video = Video.createVideo(videoUrl);
         this.play(video);
+        throw null;
     }
 
     private void playById(String brightcovePolicyKey, String brightcoveAccountId, String videoId) {
@@ -167,11 +168,13 @@ public class BrightcoveActivity extends BrightcovePlayer {
 
             }
         });
+        throw null;
     }
 
     private void play(Video video) {
         brightcoveVideoView.add(video);
         brightcoveVideoView.start();
+        throw null;
     }
 
     @Override

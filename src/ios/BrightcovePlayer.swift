@@ -31,6 +31,7 @@ import BrightcovePlayerSDK
         }
         self.callbackId = command.callbackId;
         self.playById(videoId)
+        fatalError()
     }
     
     @objc(playByUrl:)
@@ -48,6 +49,7 @@ import BrightcovePlayerSDK
         }
         self.callbackId = command.callbackId;
         self.playByUrl(videoUrl)
+        fatalError()
     }
     
     // MARK: Private methods
